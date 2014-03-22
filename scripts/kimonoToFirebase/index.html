@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://cdn.firebase.com/js/client/1.0.6/firebase.js"></script>
+</head>
+<script>
+alert("entrou");
+
+debugger;
+
+var jsonCountries = {
+  "countries": [
+    {
+      "country": "Japao"
+    },
+    {
+      "country": "Australia"
+    },
+    {
+      "country": "Coreia-do-Sul"
+    },
+    {
+      "country": "Ira"
+    },
+    {
+      "country": "Holanda"
+    },
+    {
+      "country": "Italia"
+    },
+    {
+      "country": "EUA"
+    },
+    {
+      "country": "Costa Rica"
+    },
+    {
+      "country": "Argentina"
+    },
+    {
+      "country": "Belgica"
+    },
+    {
+      "country": "Suica"
+    },
+    {
+      "country": "Alemanha"
+    },
+    {
+      "country": "Colombia"
+    },
+    {
+      "country": "Russia"
+    },
+    {
+      "country": "Bosnia"
+    },
+    {
+      "country": "Inglaterra"
+    },
+    {
+      "country": "Espanha"
+    },
+    {
+      "country": "Chile"
+    },
+    {
+      "country": "Equador"
+    },
+    {
+      "country": "Honduras"
+    },
+    {
+      "country": "Nigeria"
+    },
+    {
+      "country": "Costa-do-Marfim"
+    },
+    {
+      "country": "Camaroes"
+    },
+    {
+      "country": "Gana"
+    },
+    {
+      "country": "Argelia"
+    },
+    {
+      "country": "Grecia"
+    },
+    {
+      "country": "Croacia"
+    },
+    {
+      "country": "Portugal"
+    },
+    {
+      "country": "Franca"
+    },
+    {
+      "country": "Mexico"
+    },
+    {
+      "country": "Uruguai"
+    }
+  ]
+};
+
+
+
+		
+$.each(jsonCountries.countries, function( index, value ) {
+var countryWorldCup = value.country;
+var dataRef = new Firebase('https://cupfy.firebaseio.com/' + countryWorldCup );
+  
+$.ajax({
+
+
+    url: 'http://www.kimonolabs.com/api/addppqr6?apikey=&kimpath3=' + countryWorldCup,
+    type: 'GET',
+    crossDomain: true,
+    dataType: 'jsonp',
+    async: false,
+    success: function(result) { 
+    	debugger;
+    	
+
+		alert(countryWorldCup);
+		var json = { };
+		json= result.results.news;
+    	dataRef.set(json);
+
+     },
+    error: function() { alert('Failed!'); },
+     headers: { 'Access-Control-Allow-Origin': '*' }
+});
+
+});
+
+</script>
+</html>
