@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Layer selector example | CartoDB.js</title>
+    <title> Principal| CartoDB.js</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
@@ -49,6 +49,7 @@
     <![endif]-->
   </head>
   <body>
+    <a href="#"  id="atualizar">Ataulizar </a>
     <div id="map"></div>
     <div id="layer_selector" class="cartodb-infobox">
       <ul>
@@ -60,16 +61,18 @@
       </ul>
     </div>
 
-    <a href="#"  id="atualizar"   >Ataulizar </a>
     <!-- include cartodb.js library -->
 
       <script type="infowindow/html" id="infowindow_template">
+
       <span> custom </span>
       <div class="cartodb-popup">
         <a href="#close" class="cartodb-popup-close-button close">x</a>
 
          <div class="cartodb-popup-content-wrapper">
            <div class="cartodb-popup-content">
+           {{content.data.name}}
+      
              <img style="width: 100%" src="http://rambo.webcindario.com/images/18447755.jpg">
              <!-- content.data contains the field info -->
              <h4>{{content.data.name}}</h4>
@@ -77,32 +80,29 @@
          </div>
          <div class="cartodb-popup-tip-container"></div>
       </div>
-    </script>
-
+    // </script>
 
 
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
 
-    <script type="infowindow/html" id="infowindow_template">
-    </script>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
      <script>
 
-    //   var INFOWINDOW_TEMPLATE = [
-    //     '<div class="cartodb-popup">',
-    //     '  <a href="#close" class="cartodb-popup-close-button close">x</a>',
-    //     '   <div class="cartodb-popup-content-wrapper">',
-    //     '     <div class="cartodb-popup-content">',
-    //     '       <div id="chart_div">',
-    //     '       <script>',
-    //       '       draw_chart([{{content.data.pop_min}}, {{content.data.pop_max}}], "{{content.data.name}}");',
-    //     '       </scr' + 'ipt>',
-    //     '       </div>',
-    //     '     </div>',
-    //     '   </div>',
-    //     '   <div class="cartodb-popup-tip-container"></div>',
-    //     '</div>'].join('');
+      var INFOWINDOW_TEMPLATE2 = [
+        '<div class="cartodb-popup">',
+        '  <a href="#close" class="cartodb-popup-close-button close">x</a>',
+        '   <div class="cartodb-popup-content-wrapper">',
+        '     <div class="cartodb-popup-content">',
+        '       <div id="chart_div">',
+        '       <script>',
+          '       draw_chart([{{content.data.pop_min}}, {{content.data.pop_max}}], "{{content.data.name}}");',
+        '       </scr' + 'ipt>',
+        '       </div>',
+        '     </div>',
+        '   </div>',
+        '   <div class="cartodb-popup-tip-container"></div>',
+        '</div>'].join('');
 
       // load visualization library from google
       google.load('visualization', '1.0', {'packages':['corechart']});
@@ -201,7 +201,7 @@
            flash();
 
 
-        cartodb.createVis('map', 'http://cfrancisco.cartodb.com/api/v2/viz/cf4df9da-b1ea-11e3-ad11-0e230854a1cb/viz.json', {
+        cartodb.createVis('map', 'http://cfrancisco.cartodb.com/api/v2/viz/d8fcda1a-b20c-11e3-9d0e-0edbca4b5057/viz.json', {
           tiles_loader: true,
           center_lat: 50,
           center_lon: 20,
@@ -209,26 +209,24 @@
         })
         .done(function(vis, layers) {
           mainlayers = layers;
-          // layer 0 is the base layer, layer 1 is cartodb layer
-          // var subLayer = layers[1].getSubLayer(0);
-          // createSelector(subLayer);
+         
           var sublayer = layers[1].getSubLayer(0);
-            sublayer.setInteraction(true);
+          //   sublayer.setInteraction(true);
 
-          // sublayer.infowindow.set('template', INFOWINDOW_TEMPLATE); 
+         
             sublayer.infowindow.set('template', $('#infowindow_template').html());
 
            sublayer = layers[1].getSubLayer(1);
-            sublayer.infowindow.set('template', $('#infowindow_template').html());
-            sublayer.setInteraction(true);
+            sublayer.infowindow.set('template', INFOWINDOW_TEMPLATE2); 
+           // sublayer.infowindow.set('template', $('#infowindow_template').html());
+          //   sublayer.setInteraction(false);
 
   
-           alert($('#infowindow_template').html());
+          //  alert($('#infowindow_template').html());
 
-        })
-        .error(function(err) {
-          console.log(err);
-        });
+        }).on('error', function() {
+            console.log("some error occurred");
+          });
      
 /*
 cartodb.createLayer(map, {

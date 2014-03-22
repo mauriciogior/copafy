@@ -27,40 +27,22 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="http://libs.cartodb.com/cartodb.js/v3/cartodb.js"></script>
 
-
-<script type="infowindow/html" id="infowindow_template">
-  <span> custom </span>
-  <div class="cartodb-popup">
-    <a href="#close" class="cartodb-popup-close-button close">x</a>
-
-     <div class="cartodb-popup-content-wrapper">
-       <div class="cartodb-popup-content">
-         <img style="width: 100%" src="http://rambo.webcindario.com/images/18447755.jpg"></src>
-         <!-- content.data contains the field info -->
-         <h4>{{content.data.name}}</h4>
-       </div>
-     </div>
-     <div class="cartodb-popup-tip-container"></div>
-  </div>
-</script>
-
-
     <script>
 
-      // var INFOWINDOW_TEMPLATE = [
-      //   '<div class="cartodb-popup">',
-      //   '  <a href="#close" class="cartodb-popup-close-button close">x</a>',
-      //   '   <div class="cartodb-popup-content-wrapper">',
-      //   '     <div class="cartodb-popup-content">',
-      //   '       <div id="chart_div">',
-      //   '       <script>',
-      //     '       draw_chart([{{content.data.pop_min}}, {{content.data.pop_max}}], "{{content.data.name}}");',
-      //   '       </scr' + 'ipt>',
-      //   '       </div>',
-      //   '     </div>',
-      //   '   </div>',
-      //   '   <div class="cartodb-popup-tip-container"></div>',
-      //   '</div>'].join('');
+      var INFOWINDOW_TEMPLATE = [
+        '<div class="cartodb-popup">',
+        '  <a href="#close" class="cartodb-popup-close-button close">x</a>',
+        '   <div class="cartodb-popup-content-wrapper">',
+        '     <div class="cartodb-popup-content">',
+        '       <div id="chart_div">',
+        '       <script>',
+          '       draw_chart([{{content.data.pop_min}}, {{content.data.pop_max}}], "{{content.data.name}}");',
+        '       </scr' + 'ipt>',
+        '       </div>',
+        '     </div>',
+        '   </div>',
+        '   <div class="cartodb-popup-tip-container"></div>',
+        '</div>'].join('');
 
       // load visualization library from google
       google.load('visualization', '1.0', {'packages':['corechart']});
@@ -100,9 +82,7 @@
          .on('done', function(layer) {
            // get sublayer 0 and set the infowindow template
            var sublayer = layer.getSubLayer(0);
-           // sublayer.infowindow.set('template', INFOWINDOW_TEMPLATE);
-            sublayer.infowindow.set('template', $('#infowindow_template').html());
-
+           sublayer.infowindow.set('template', INFOWINDOW_TEMPLATE);
           }).on('error', function() {
             console.log("some error occurred");
           });
@@ -110,6 +90,5 @@
 
       window.onload = main;
     </script>
-
   </body>
 </html>
