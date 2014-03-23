@@ -35,12 +35,12 @@ $(document).ready(function() {
 		if(currentStateForRightMenu == "0")
 		{
 			$("#instafeed").hide();
-			$(".showTweets").show();
+			$(".allTweets").show();
 		}
 		else
 		{
 			$("#instafeed").show();
-			$(".showTweets").hide();
+			$(".allTweets").hide();
 		}
 	});
 
@@ -104,7 +104,15 @@ $(document).ready(function() {
 				//console.log(toBlink+ " - "+ counterTo);
 
 				if(toBlink == counterTo)
-				{
+				{				
+					var old = $("li[data-country='"+ countriesHash[i] +"'] span").html();
+
+					old = parseInt(old);
+
+					old++;
+
+					$("li[data-country='"+ countriesHash[i] +"'] span").html(old);
+
 					blinkCountry(countriesHash[i])
 
 					if(currentCountry == i)
@@ -145,8 +153,16 @@ $(document).ready(function() {
 				if(toBlink == counterTo)
 				{
 					blinkCountry(countriesHash[i]);
-				}
 				
+					var old = $("li[data-country='"+ countriesHash[i] +"'] span");
+
+					old = parseInt(old);
+
+					old++;
+
+					$("li[data-country='"+ countriesHash[i] +"'] span").html(old);
+				}
+
 				counterTo++;
 			});
 		}

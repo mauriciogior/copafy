@@ -27,6 +27,39 @@ var access_token_secret = 'wCcMhqUuBR5z95nDR7IXchGdmbpFPH3Xi6AR6ryIiGtFZ';   // 
 // Twitter symbols array.
 var watchSymbols = ['#chelsea', '#arsenal', '#football', '#worldcup', '#premiereleague', '#champions', '#league', '#uefa', '#fifa', '#manu', 'twitter', 'facebook', 'instagram'];
 
+
+//sphero
+
+var serialport = require("spheron/node_modules/serialport");
+var SerialPort = serialport.SerialPort;
+var util = require("util"), repl = require("repl");
+
+var sphero = require('spheron/lib/sphero');
+var toolbelt = require('spheron/lib/toolbelt');
+var commands = require('spheron/lib/commands');
+var macro = require('spheron/lib/macro-builder').macro;
+
+var dev;
+
+var connected = false;
+
+serialport.list(function (err, ports) {
+  dev = ports[ports.length -1].comName;
+
+  sphero = sphero().open(dev, function(err){
+    if (err) {
+      console.log("ERRO CONEXAO", err);
+      return;
+    }
+    console.log("CONECTADO");
+
+    sphero.setRGB(0xffffff);
+
+    connected = true;
+  });
+});
+
+
 //Generic Express setup
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -100,10 +133,19 @@ t.stream('statuses/filter', { track: watchSymbols }, function(stream) {
       //If something was mentioned, increment the total counter and send the update to all the clients
       if (claimed) {
 
-    console.log(tweet);
-    
-          //Send to all the clients
-          sockets.sockets.emit('data', tweet);
+        if(connected)
+        {
+          //sphero.setBackLED(255);
+          sphero.setRawMotorValues(1, 255, 0, 0);
+          setTimeout(function(){
+            sphero.setRawMotorValues(0, 0, 0, 0);
+          }, 1000);
+        }
+  
+        //Send to all the clients
+        sockets.sockets.emit('data', tweet);
+
+        console.log(tweet);
       }
     }
   });
@@ -112,4 +154,8 @@ t.stream('statuses/filter', { track: watchSymbols }, function(stream) {
 //Create the server
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
+});
+
+server.on('close', function() {
+  sphero.setRawMotorValues(0, 0, 0, 0);
 });
