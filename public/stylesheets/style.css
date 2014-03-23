@@ -83,7 +83,7 @@ header .showTweets span {
   right: 0px;
   top: 24px;
 }
-header .showTweets span:before {
+header .showTweets spanbefore {
   height: 2px;
   width: 15px;
   background-color: #fff;
@@ -93,7 +93,7 @@ header .showTweets span:before {
   top: 5px;
   content: ' ';
 }
-header .showTweets span:after {
+header .showTweets spanafter {
   height: 2px;
   width: 15px;
   background-color: #fff;
@@ -153,4 +153,33 @@ section #instafeed {
 section.off {
   top: -100%;
   transition: top 0.25s ease;
+}
+#bottom_bar {
+  z-index: 30;
+  box-shadow: 0px 0px 48px -7px #000;
+  background-color: rgba(126,120,120,0.9);
+  bottom: 0;
+  height: 52px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+#bottom_bar nav {
+  margin-left: 6em;
+}
+#bottom_bar nav ul {
+  margin: 0px;
+}
+#bottom_bar nav ul li {
+  float: left;
+  list-style: none;
+  color: #ecf0f1;
+  line-height: 9px;
+  padding: 0 1em;
+  cursor: pointer;
+  font-weight: 10;
+}
+#bottom_bar nav ul li .flag {
+  width: 30px;
+  height: 21px;
 }
