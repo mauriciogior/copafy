@@ -1,0 +1,155 @@
+#toFillContent ul {
+  margin: 0px;
+  padding: 0px;
+  height: 200px;
+}
+#toFillContent ul li {
+  margin: 0.5em 0;
+  padding: 1em;
+  box-shadow: 0px 0px 20px -10px #000;
+  list-style: none;
+}
+#toFillContent .fillWithNews {
+  display: none;
+}
+#toFillContent .menu {
+  height: 50px;
+}
+#toFillContent .menu li {
+  float: left;
+  box-shadow: none;
+  width: 50%;
+  padding: 0px;
+  text-align: center;
+  border-bottom: 5px solid #2980b9;
+  color: #000;
+  padding: 1em 0;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+#toFillContent .menu li.active {
+  color: #48abec;
+  border-bottom: 5px solid #48abec;
+}
+header {
+  position: fixed;
+  height: 50px;
+  width: 100%;
+  background-color: rgba(40,40,40,0.9);
+  z-index: 30;
+  box-shadow: 0px 0px 20px -7px #000;
+}
+header .brand {
+  background-image: url("../images/logotest-01.png");
+  background-size: contain;
+  width: 100px;
+  height: 50px;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-left: 1em;
+  display: inline-block;
+}
+header nav {
+  display: inline-block;
+}
+header nav ul {
+  margin: 0px;
+}
+header nav ul li {
+  float: left;
+  list-style: none;
+  color: #ecf0f1;
+  line-height: 50px;
+  padding: 0 1em;
+  cursor: pointer;
+}
+header nav ul li.active {
+  border-bottom: 2px solid #ecf0f1;
+}
+header .showTweets {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  display: inline-block;
+  right: 0px;
+  cursor: pointer;
+}
+header .showTweets span {
+  height: 2px;
+  width: 15px;
+  background-color: #fff;
+  display: block;
+  position: absolute;
+  right: 0px;
+  top: 24px;
+}
+header .showTweets span:before {
+  height: 2px;
+  width: 15px;
+  background-color: #fff;
+  display: block;
+  position: absolute;
+  right: 0px;
+  top: 5px;
+  content: ' ';
+}
+header .showTweets span:after {
+  height: 2px;
+  width: 15px;
+  background-color: #fff;
+  display: block;
+  position: absolute;
+  right: 0px;
+  bottom: 5px;
+  content: ' ';
+}
+section {
+  position: absolute;
+  z-index: 29;
+  right: 0px;
+  height: 100%;
+  width: 300px;
+  background-color: rgba(255,255,255,0.9);
+  transition: right 0.25s;
+  box-shadow: 0px 0px 20px -7px #000;
+}
+section .rightMenu {
+  margin-top: 70px;
+  padding: 0px;
+}
+section .rightMenu li {
+  float: left;
+  list-style: none;
+  padding: 1em 0;
+  text-align: center;
+  width: 50%;
+  color: #444;
+  cursor: pointer;
+  transition: border 0.25s;
+}
+section .rightMenu li.active {
+  border-bottom: 2px solid #444;
+  transition: border 0.25s;
+}
+section .allTweets {
+  margin-top: 10em;
+  height: calc(100% - 10em);
+  overflow: auto;
+  margin-bottom: 0;
+  padding: 0;
+}
+section .allTweets li {
+  list-style: none;
+  padding: 1em 2em;
+}
+section #instafeed {
+  position: absolute;
+  top: 135px;
+  overflow: auto;
+  height: calc(100% - 135px);
+  display: none;
+}
+section.off {
+  right: -300px;
+  transition: right 0.25s;
+}

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Principal| CartoDB.js</title>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+		<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+		<script src='components/socket.io-client/dist/socket.io.min.js'></script>
+    <script src='/javascripts/instafeed.js'></script>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+		<style>
+			@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300);
+      @import url(http://fonts.googleapis.com/css?family=Roboto:300);
+		  html, body, #map {
+		    height: 100%;
+		    padding: 0;
+		    margin: 0;
+		    font-family: "Roboto Condensed", sans-serif;
+		    font-weight: 300;
+		  }
+      #toFillContent {
+        font-family: "Roboto", sans-serif;
+        font-weight: 300;
+      }
+
+		</style>
+
+		<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<!--[if lte IE 8]>
+		<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
+		<![endif]-->
+	</head>
+	<body>
+		<header>
+			<div class="brand"></div>
+			<nav>
+				<ul>
+					<li class="active" data-i="0">TWEETS</li>
+					<li data-i="1">NOTÍCIAS</li>
+				</ul>
+			</nav>
+      <div class="showTweets">
+        <span></span>
+      </div>
+		</header>
+    <section class="off">
+      <ul class="rightMenu">
+        <li class="active" data-i="0">Tweets</li>
+        <li data-i="1">Fotos</li>
+      </ul>
+      <ul class="allTweets"></ul>
+      <div id="instafeed"></div>
+    </section>
+		<div id="map"></div>
+
+		<script type="infowindow/html" id="infowindow_template">
+			<div class="cartodb-popup">
+			<a href="#close" class="cartodb-popup-close-button close">x</a>
+
+			 <div class="cartodb-popup-content-wrapper" id="toFillContent">
+			 	<ul class="fillWithTweets">
+			 	</ul>
+			 </div>
+			 <div class="cartodb-popup-tip-container"></div>
+			</div>
+		</script>
+
+		<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		
+		<script>
+      // create layer selector
+      var on = 1;
+      var mainlayers;
+      
+      var name = "Brazil";
+      var apikey = "10e6c1a196e97ca2b95080b085395ba1208cc925";
+      var dataGeral;
+
+
+     function flash(nome)
+      {
+
+        if(on)
+            {
+              mainlayers[1].getSubLayer(1).hide();
+               on = 0;
+            }
+           else
+            {
+             mainlayers[1].getSubLayer(1).show();
+               on = 1;
+           } 
+      }
+
+    var polygons = {};
+    var map;
+    var myHash = {}; // New object
+    var countriesHash = {};
+
+    var currentState = "0"; // 0: tweet; 1: noticia
+    var currentStateForRightMenu = "0"; // 0: tweet; 1: fotos
+
+    var currentCountry;
+
+       var qq; 
+
+      function main() {
+        map = new L.Map('map', {
+           tiles_loader: true,
+          zoomControl: false,
+          center: [43, 0],
+          zoom: 2
+        });
+
+    
+        L.tileLayer('http://{s}.api.cartocdn.com/base-light/{z}/{x}/{y}.png', {
+          attribution: 'CartoDB'
+        // L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png', {
+        //   attribution: 'Stamen'
+        }).addTo(map);
+
+
+        function geometryHover(username, map, layer, options) {
+
+          options = options || {}
+          var HIGHLIGHT_STYLE = {
+            weight: 3,
+            color: '#FFD6CC',
+            opacity: 1,
+            fillColor: '#FF0000',
+            fillOpacity: 0.3
+          };
+          style = options.style || HIGHLIGHT_STYLE;
+          var polygonsHighlighted = [];
+
+
+          // fetch the geometry
+          var sql = new cartodb.SQL({ user: username, format: 'geojson' });
+          sql.execute("select name, cartodb_id, ST_Simplify(the_geom, 0.1) as the_geom from (" + layer.getSQL() + ") as _wrap").done(function(geojson) {
+            var features = geojson.features;
+            for(var i = 0; i < features.length; ++i) {
+              var f = geojson.features[i];
+              var key = f.properties.cartodb_id;
+                myHash[f.properties.name] = f.properties.cartodb_id;
+                countriesHash[f.properties.cartodb_id] = f.properties.name;
+              // generate geometry
+              var geo = L.GeoJSON.geometryToLayer(features[i].geometry);
+              geo.setStyle(style);
+
+              // add to polygons
+              polygons[key] = polygons[key] ||  [];
+              polygons[key].push(geo);
+            }
+          });
+
+           // myHash['one'] = [1,10,5];
+          function featureOver(e, pos, latlng, data) {
+           // qq = data;
+          
+            featureOut();
+            var pol = polygons[data.cartodb_id] || [];
+         
+            for(var i = 0; i < pol.length; ++i) {
+              map.addLayer(pol[i]);
+              polygonsHighlighted.push(pol[i]);
+            }
+          }
+
+          function featureOut() {
+            var pol = polygonsHighlighted;
+            for(var i = 0; i < pol.length; ++i) {
+              map.removeLayer(pol[i]);
+            }
+            polygonsHighlighted = [];
+          }
+
+          // layer.on('featureOver', featureOver);
+         // layer.on('featureOut', featureOut);
+        layer.setInteraction(true);
+
+        layer.on('featureClick', function(e, latlng, pos, data, layer) {
+          dataGeral = data;
+      		currentCountry = data.cartodb_id;
+
+          if(currentState != "1") return;
+
+          window.setTimeout(function()
+          {
+            var html = "<ul>";
+
+            var countriesRef = new Firebase('https://cupfy.firebaseio.com/');
+
+            countriesRef
+            .child(countriesHash[currentCountry])
+            .on('value', function(data)
+            {
+              data.forEach(function(country)
+              {
+                var news = data.val();
+
+                for(var i in news)
+                {
+                  html += "<li>";
+
+                  html += "<img src='";
+                  html += news[i].newsThumb.src;
+                  html += "'/>";
+
+                  html += "<a target='_blank' href='";
+                  html += news[i].newsTitle.href;
+                  html += "'>";
+
+                  html += news[i].newsTitle.text;
+
+                  html += "</a>";
+
+                  html += "</li>";
+                }
+              });
+
+              html += "</ul>";
+              $('.cartodb-popup-content-wrapper').html(html);
+            });
+          }, 500);
+        });
+      
+        }
+
+
+        cartodb.createLayer(map, 'http://cfrancisco.cartodb.com/api/v2/viz/d8fcda1a-b20c-11e3-9d0e-0edbca4b5057/viz.json')
+         .addTo(map)
+         .on('done', function(layer) {
+           geometryHover('cfrancisco', map, layer.getSubLayer(0));
+           var sublayer = layer.getSubLayer(0);
+           sublayer.infowindow.set('template', $('#infowindow_template').html());
+
+
+
+
+        }).on('error', function() {
+          cartodb.log.log("some error occurred");
+        });
+      }
+
+
+        function blinkCountry(nome) {
+           var pol = polygons[myHash[nome]] || [];
+
+            for( i = 0; i < pol.length; ++i) {
+              map.addLayer(pol[i]);
+              // delay(200);
+             
+              // polygonsHighlighted.push(pol[i]);
+            }
+
+            setTimeout(function(){
+            for( i = 0; i < pol.length; ++i) {
+            
+               map.removeLayer(pol[i]);
+              // delay(200);
+             
+              // polygonsHighlighted.push(pol[i]);
+            }
+             },500);
+
+        }
+
+
+      // you could use $(window).load(main);
+      window.onload = main;
+		</script>
+		<script src="https://cdn.firebase.com/js/client/1.0.6/firebase.js"></script>
+		<script src="/javascripts/script.js"></script>
+	</body>
+</html>
