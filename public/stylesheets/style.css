@@ -179,6 +179,7 @@ section.off {
   line-height: 9px;
   padding: 1em 1em 0 0;
   font-weight: 10;
+  min-width: 55px;
 }
 #bottom_bar nav ul li .flag {
   width: 30px;

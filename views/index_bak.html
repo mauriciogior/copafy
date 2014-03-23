@@ -408,13 +408,13 @@
       }
 
 
-        function estilo(cor, borda)
+        function estilo(cor)
         {
 
           var options = options || {}
           var HIGHLIGHT_STYLE = {
-            weight: borda,
-            color: "#e74c3c",
+            weight: 2,
+            color: cor,
             opacity: 1,
             fillColor: cor,
             fillOpacity: 0.3
@@ -433,14 +433,14 @@
 
         function ativarGrau(nome) {   
            var aux =  myHashCor[nome]*1111;
-            estilo('#00'+aux, 0);
+            estilo('#FF'+aux);
             geoMat[nome].setStyle(style);
              map.addLayer(geoMat[nome]);
         }
 
 
-      function blinkCountry2(nome){
-         estilo('#ffffff', 2);
+      function blinkCountry(nome ){
+         estilo('#ffffff');
          geoMat[nome].setStyle(style);
               map.addLayer(geoMat[nome]);
             setTimeout(function(){

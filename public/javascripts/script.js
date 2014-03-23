@@ -113,7 +113,8 @@ $(document).ready(function() {
 
 					$("li[data-country='"+ countriesHash[i] +"'] span").html(old);
 
-					blinkCountry(countriesHash[i])
+					aumentarGrau(countriesHash[i]);
+					blinkCountry2(countriesHash[i]);
 
 					if(currentCountry == i)
 					{
@@ -154,7 +155,7 @@ $(document).ready(function() {
 				{
 					blinkCountry(countriesHash[i]);
 				
-					var old = $("li[data-country='"+ countriesHash[i] +"'] span");
+					var old = $("li[data-country='"+ countriesHash[i] +"'] span").html();
 
 					old = parseInt(old);
 
